@@ -12,21 +12,35 @@ html.sqa-writer.sqa-nav-open [role="navigation"][aria-label="Main navigation"] {
 }
 html:not(.sqa-writer) .sqa-w-col { display: none !important; }
 
+/* Column geometry, shared by the column and the page offset below. */
+html.sqa-writer {
+  /* Inset from the window edge like Substack's right column (~35px at 1800px),
+     scaling down on smaller screens. */
+  --sqa-col-left: clamp(16px, 2vw, 40px);
+  /* 208px at 1280 (the narrowest width we run at), 273px at 1440, 320px from ~1600 up. */
+  --sqa-col-w: clamp(208px, calc(50vw - 378px - var(--sqa-col-left) - 40px), 320px);
+}
+
+/* Balance the centre column. Substack reserves 232px for its nav
+   (main.reader-nav-page's margin-left) and centres the feed in what's left;
+   our column is wider, which pushed the feed off-centre. Start the content
+   area just past our column instead. The +13px (inner 20px padding → +33px)
+   mirrors the right column, whose cards sit 33px inside its content edge, so
+   the visible space left and right of the feed comes out equal at any width
+   (36px each at 1280, 137px at 1600, 244px at 1820). */
+html.sqa-writer main.reader-nav-page {
+  margin-left: calc(var(--sqa-col-left) + var(--sqa-col-w) + 13px) !important;
+}
+
 .sqa-w-col {
   --sqa-accent: #ff6719;
   --sqa-muted: rgba(127, 127, 127, 0.95);
   --sqa-line: rgba(127, 127, 127, 0.2);
-  /* Inset from the window edge like Substack's right column (~35px at 1800px),
-     scaling down on smaller screens. */
-  --sqa-col-left: clamp(16px, 2vw, 40px);
   position: fixed;
   top: 0;
   left: var(--sqa-col-left);
   z-index: 3; /* Substack nav is 2; modals are 999 */
-  /* At ≥ 1280px (the only widths we run at) the home feed's left edge is
-     50vw − 378px. Fill the space up to it, leaving ≥ 40px before the feed:
-     208px at 1280 (28px gap), 273px at 1440, 320px from ~1600 up. */
-  width: clamp(208px, calc(50vw - 378px - var(--sqa-col-left) - 40px), 320px);
+  width: var(--sqa-col-w);
   height: 100vh;
   box-sizing: border-box;
   /* Top matches the feed's composer and the search box (24px). */
