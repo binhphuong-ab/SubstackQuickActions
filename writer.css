@@ -1,0 +1,136 @@
+/* ---------- Writer column (replaces Substack's left nav) ---------- */
+
+/* Hide the original nav; ☰ Menu shows it again as a popover. */
+html.sqa-writer:not(.sqa-nav-open) [role="navigation"][aria-label="Main navigation"] {
+  display: none !important;
+}
+html.sqa-writer.sqa-nav-open [role="navigation"][aria-label="Main navigation"] {
+  z-index: 4 !important; /* above our column (3), below Substack modals (999) */
+  background: var(--sqa-page-bg, #16171a) !important;
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.45);
+  border-right: 1px solid rgba(127, 127, 127, 0.2);
+}
+html:not(.sqa-writer) .sqa-w-col { display: none !important; }
+
+.sqa-w-col {
+  --sqa-accent: #ff6719;
+  --sqa-muted: rgba(127, 127, 127, 0.95);
+  --sqa-line: rgba(127, 127, 127, 0.2);
+  /* Inset from the window edge like Substack's right column (~35px at 1800px),
+     scaling down on smaller screens. */
+  --sqa-col-left: clamp(16px, 2vw, 40px);
+  position: fixed;
+  top: 0;
+  left: var(--sqa-col-left);
+  z-index: 3; /* Substack nav is 2; modals are 999 */
+  /* At ≥ 1280px (the only widths we run at) the home feed's left edge is
+     50vw − 378px. Fill the space up to it, leaving ≥ 40px before the feed:
+     208px at 1280 (28px gap), 273px at 1440, 320px from ~1600 up. */
+  width: clamp(208px, calc(50vw - 378px - var(--sqa-col-left) - 40px), 320px);
+  height: 100vh;
+  box-sizing: border-box;
+  /* Top matches the feed's composer and the search box (24px). */
+  padding: 24px 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--sqa-bg, transparent);
+  color: var(--sqa-fg, inherit);
+  font-family: inherit;
+  font-size: 14px;
+}
+.sqa-w-col a { color: inherit; text-decoration: none; }
+.sqa-w-col button { font: inherit; color: inherit; }
+
+/* Header: you + menu */
+/* Negative margin lines the avatar and ☰ icon up with the buttons' edges. */
+.sqa-w-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 -4px; }
+.sqa-w-me { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 4px; border-radius: 8px; }
+.sqa-w-me:hover { background: rgba(127, 127, 127, 0.12); }
+.sqa-w-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex: none; background: var(--sqa-line); }
+.sqa-w-initial { display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; background: var(--sqa-accent); color: #fff; }
+.sqa-w-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sqa-w-menu {
+  all: unset; box-sizing: border-box; cursor: pointer; flex: none;
+  width: 36px; height: 36px; border-radius: 8px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.sqa-w-menu:hover { background: rgba(127, 127, 127, 0.15); }
+html.sqa-nav-open .sqa-w-menu { background: rgba(127, 127, 127, 0.2); }
+
+/* Write buttons */
+.sqa-w-write { display: flex; flex-direction: column; gap: 8px; }
+.sqa-w-btn {
+  all: unset; box-sizing: border-box; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; border-radius: 10px;
+  font-weight: 600; font-size: 15px;
+  border: 1px solid var(--sqa-line);
+}
+.sqa-w-btn span { display: inline-flex; }
+.sqa-w-btn:hover { background: rgba(127, 127, 127, 0.12); }
+/* Primary = New article: the big orange call to action. */
+.sqa-w-btn.sqa-w-primary {
+  height: 40px; font-size: 14px; font-weight: 700; /* same size as New note */
+  background: var(--sqa-accent); border-color: var(--sqa-accent); color: #fff !important;
+  box-shadow: 0 4px 14px rgba(255, 103, 25, 0.28);
+}
+.sqa-w-btn.sqa-w-primary:hover { filter: brightness(1.08); background: var(--sqa-accent); }
+/* Secondary = New note: quieter, a warm-up option. */
+.sqa-w-btn.sqa-w-secondary { height: 40px; font-size: 14px; font-weight: 500; color: var(--sqa-muted) !important; }
+.sqa-w-btn.sqa-w-secondary:hover { color: var(--sqa-fg, inherit) !important; }
+
+/* Nudge card */
+.sqa-w-nudge {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 12px; border-radius: 12px;
+  border: 1px solid var(--sqa-line);
+  background: rgba(127, 127, 127, 0.06);
+}
+.sqa-w-nudge.sqa-w-day, .sqa-w-nudge.sqa-w-week { border-color: rgba(255, 103, 25, 0.55); background: rgba(255, 103, 25, 0.08); }
+.sqa-w-nudge.sqa-w-done { border-color: rgba(63, 185, 80, 0.5); background: rgba(63, 185, 80, 0.08); }
+.sqa-w-nudge-title { font-weight: 700; font-size: 15px; }
+.sqa-w-nudge-text { font-size: 13px; line-height: 18px; color: var(--sqa-muted); }
+
+.sqa-w-week { display: flex; justify-content: space-between; padding-top: 2px; }
+.sqa-w-day { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; color: var(--sqa-muted); }
+.sqa-w-dot { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--sqa-line); box-sizing: border-box; }
+.sqa-w-day.on .sqa-w-dot { background: var(--sqa-accent); border-color: var(--sqa-accent); }
+.sqa-w-nudge.sqa-w-done .sqa-w-day.on .sqa-w-dot { background: #3fb950; border-color: #3fb950; }
+.sqa-w-day.today .sqa-w-dot { box-shadow: 0 0 0 2px var(--sqa-bg, #16171a), 0 0 0 3.5px var(--sqa-accent); }
+.sqa-w-day.today .sqa-w-dlabel { color: var(--sqa-fg, inherit); font-weight: 700; }
+.sqa-w-day.future { opacity: 0.45; }
+
+.sqa-w-prompt {
+  all: unset; box-sizing: border-box; cursor: pointer;
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 8px 10px; border-radius: 8px;
+  font-size: 13px; line-height: 18px;
+  background: rgba(127, 127, 127, 0.1);
+}
+.sqa-w-prompt:hover { background: rgba(127, 127, 127, 0.18); }
+.sqa-w-prompt-label { font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sqa-muted); }
+
+/* Recent lists */
+.sqa-w-section { display: flex; flex-direction: column; gap: 4px; }
+.sqa-w-sechead {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 0 4px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--sqa-muted);
+}
+.sqa-w-sechead a { font-weight: 500; text-transform: none; letter-spacing: 0; }
+.sqa-w-sechead a:hover { text-decoration: underline; }
+.sqa-w-list { display: flex; flex-direction: column; }
+.sqa-w-item { display: flex; flex-direction: column; gap: 4px; padding: 8px 6px; border-radius: 8px; }
+.sqa-w-item + .sqa-w-item { border-top: 1px solid var(--sqa-line); }
+.sqa-w-item:hover { background: rgba(127, 127, 127, 0.1); }
+.sqa-w-itemtext {
+  font-size: 13px; line-height: 18px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.sqa-w-itemtext.sqa-w-title { font-weight: 600; }
+.sqa-w-itemmeta { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--sqa-muted); }
+.sqa-w-itemmeta > span:first-child { margin-right: 6px; }
+.sqa-w-stat { display: inline-flex; margin-left: 4px; }
+.sqa-w-empty { padding: 6px 4px; font-size: 12px; line-height: 17px; color: var(--sqa-muted); }

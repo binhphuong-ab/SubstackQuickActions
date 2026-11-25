@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Substack Quick Actions",
+  "version": "1.3.7",
+  "description": "A writing-first Substack: quick note actions, a Saved sidebar, a writer column with daily/weekly nudges, and fewer distractions.",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://substack.com/*"],
+      "js": ["content.js", "writer.js"],
+      "css": ["content.css", "writer.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
