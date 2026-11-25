@@ -112,3 +112,7 @@ extensions (Edge, Brave, Arc).
 
 There's no build step: edit the files, then click ↻ on the extension's card in
 `chrome://extensions` and reload the Substack tab.
+
+## License
+
+[MIT](LICENSE). This project isn't affiliated with or endorsed by Substack.
